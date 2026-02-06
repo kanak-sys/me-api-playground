@@ -8,7 +8,7 @@ export default function ProfileView({ id, onSkillClick, onLoad }) {
 
   useEffect(() => {
     setLoading(true)
-    axios.get(`http://127.0.0.1:8000/api/profile/${id}/`)
+    axios.get(`http://127.0.0.1:8000/api/profile/`)
       .then(r => {
         setData(r.data)
         setErr(null)
