@@ -9,8 +9,11 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
-SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")  # change for prod
-DEBUG = os.getenv("DEBUG", "True").lower() in ("1", "true", "yes")
+SECRET_KEY = os.environ["SECRET_KEY"]
+
+#SECRET_KEY = os.getenv("SECRET_KEY")  # change for prod
+DEBUG = False
+#DEBUG = os.getenv("DEBUG", "True").lower() in ("1", "true", "yes")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 ALLOWED_HOSTS = [
     "me-api-playground-1-7izk.onrender.com",
@@ -114,3 +117,17 @@ LOGGING = {
     "handlers": {"console": {"class": "logging.StreamHandler"}},
     "root": {"handlers": ["console"], "level": "DEBUG" if DEBUG else "INFO"},
 }
+
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = "DENY"
