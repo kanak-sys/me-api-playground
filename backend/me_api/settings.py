@@ -12,10 +12,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")  # change for prod
 DEBUG = os.getenv("DEBUG", "True").lower() in ("1", "true", "yes")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 ALLOWED_HOSTS = [
-    "me-api-playground.onrender.com"
+    "me-api-playground-1-7izk.onrender.com",
+    ".onrender.com",
+    "localhost",
+    "127.0.0.1",
 ]
+
 
 # Application definition
 INSTALLED_APPS = [
