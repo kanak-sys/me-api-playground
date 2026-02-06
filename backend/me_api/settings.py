@@ -10,6 +10,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
 SECRET_KEY = os.environ["SECRET_KEY"]
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY is not set")
 
 #SECRET_KEY = os.getenv("SECRET_KEY")  # change for prod
 DEBUG = False
@@ -23,16 +25,20 @@ ALLOWED_HOSTS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
+    # Production frontend
     "https://sage-vacherin-589b26.netlify.app",
+
+    # Local dev
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://sage-vacherin-589b26.netlify.app",
 ]
-
-CORS_ALLOW_CREDENTIALS = True
 
 
 # Application definition
@@ -51,8 +57,6 @@ INSTALLED_APPS = [
     # Your apps
     "api",
 
-    "corsheaders",
-    "rest_framework"
 ]
 
 MIDDLEWARE = [
@@ -119,12 +123,7 @@ REST_FRAMEWORK = {
 
 # CORS - allow local frontend for dev
 # Example: http://localhost:5173 (Vite default) and 127.0.0.1
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+
 
 # Logging (console)
 LOGGING = {
