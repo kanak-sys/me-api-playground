@@ -21,9 +21,19 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
 ]
+
+CORS_ALLOW_ALL_ORIGINS = False
+
 CORS_ALLOWED_ORIGINS = [
     "https://sage-vacherin-589b26.netlify.app",
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://sage-vacherin-589b26.netlify.app",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
 
 # Application definition
 INSTALLED_APPS = [
@@ -40,9 +50,13 @@ INSTALLED_APPS = [
 
     # Your apps
     "api",
+
+    "corsheaders",
+    "rest_framework"
 ]
 
 MIDDLEWARE = [
+    
     "corsheaders.middleware.CorsMiddleware",  # must be high in the list
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
