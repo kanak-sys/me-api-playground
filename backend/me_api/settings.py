@@ -21,7 +21,9 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
 ]
-
+CORS_ALLOWED_ORIGINS = [
+    "https://sage-vacherin-589b26.netlify.app",
+]
 
 # Application definition
 INSTALLED_APPS = [
