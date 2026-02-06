@@ -5,15 +5,30 @@ from django.db.models import Count, Q
 from .models import Profile, Project, Skill
 from .serializers import ProfileSerializer, ProjectSerializer, SkillSerializer
 import logging
+
 logger = logging.getLogger(__name__)
 
+
+# 🔹 Default profile (NO ID REQUIRED)
+@api_view(['GET'])
+def profile_default(request):
+    profile = Profile.objects.first()
+    if not profile:
+        return Response({"error": "No profile found"}, status=404)
+    return Response(ProfileSerializer(profile).data)
+
+
+# 🔹 Profile by ID (optional, still kept)
 class ProfileDetail(generics.RetrieveUpdateAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     lookup_field = 'id'
 
+
+# 🔹 List projects (optional skill filter)
 class ProjectList(generics.ListAPIView):
     serializer_class = ProjectSerializer
+
     def get_queryset(self):
         qs = Project.objects.all()
         skill = self.request.query_params.get('skill')
@@ -22,28 +37,41 @@ class ProjectList(generics.ListAPIView):
             qs = qs.filter(skills__name__iexact=skill)
         return qs.distinct()
 
+
+# 🔹 Top skills
 class TopSkills(generics.GenericAPIView):
     def get(self, request):
         top = Skill.objects.annotate(count=Count('projects')).order_by('-count')[:20]
         data = [{'name': s.name, 'count': s.count} for s in top]
         return Response(data)
 
+
+# 🔹 Search
 class SearchView(generics.GenericAPIView):
     def get(self, request):
-        q = request.query_params.get('q','').strip()
+        q = request.query_params.get('q', '').strip()
         if not q:
             return Response({'projects': [], 'profiles': []})
+
         projects = Project.objects.filter(
-            Q(title__icontains=q) | Q(description__icontains=q) | Q(skills__name__icontains=q)
+            Q(title__icontains=q) |
+            Q(description__icontains=q) |
+            Q(skills__name__icontains=q)
         ).distinct()
+
         profiles = Profile.objects.filter(
-            Q(name__icontains=q) | Q(education__icontains=q) | Q(skills__name__icontains=q)
+            Q(name__icontains=q) |
+            Q(education__icontains=q) |
+            Q(skills__name__icontains=q)
         ).distinct()
+
         return Response({
             'projects': ProjectSerializer(projects, many=True).data,
             'profiles': ProfileSerializer(profiles, many=True).data
         })
 
+
+# 🔹 Health check
 @api_view(['GET'])
 def health(request):
-    return Response({'status':'ok'}, status=200)
+    return Response({'status': 'ok'}, status=200)
